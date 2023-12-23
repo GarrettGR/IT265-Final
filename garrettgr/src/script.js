@@ -136,6 +136,22 @@ $(document).ready(function() {
         printLine(data.history['prompt_outputs'][data.history['prompt_outputs'].length - 1]);
         setLocation(data.player['location'], data.player['input_position']);
         showHealth(data.player['health']);
+
+        if (data.player['health'] <= 0) {
+            $('#submit-btn').prop('disabled', true);
+            $('#submit-btn').removeClass('btn-primary');
+            $('#submit-btn').addClass('btn-secondary');
+            $('#user-input').prop('disabled', true);
+            $('#user-input').attr('placeholder', 'You are dead');
+            alert('You died :( -- but you can restart the game by clicking the "Reset" button!');
+        }
+
+        if (requests % 2 == 0) {
+            $('#player_display h5').text("Player 2's turn");
+        } else {
+            $('#player_display h5').text("Player 1's turn");
+        }
+
     };
 
     const sendRequest = (userInput, destination, callback) => {
@@ -223,9 +239,9 @@ $(document).ready(function() {
         // }
 
         //? always send a blank request first?
-        sendRequest('', 'post', function() {
-            console.log('Blank request finished');
-        });
+        // sendRequest('', 'post', function() {
+        //     console.log('Blank request finished');
+        // });
 
         sendRequest(userInput, 'post', function(response) {
             json = response;

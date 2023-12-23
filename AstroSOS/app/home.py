@@ -183,54 +183,50 @@ class Item:
         
 # -------------------------------------------------------------------------
 
-def initialize_game_state():
-            
-    keycard = Item('key card', 'A key card with the name "Jake" on it')
-    firstaid = Item('first aid kit', 'A first aid kit with a red cross on it')
-    firstaid2 = Item('first aid kit', 'A first aid kit with a red cross on it')
-    crowbar = Item('crowbar', 'A crowbar that looks sturdy for how light it is')
+keycard = Item('key card', 'A key card with the name "Jake" on it')
+firstaid = Item('first aid kit', 'A first aid kit with a red cross on it')
+firstaid2 = Item('first aid kit', 'A first aid kit with a red cross on it')
+crowbar = Item('crowbar', 'A crowbar that looks sturdy for how light it is')
 
-    fireExtinguiser = Item('fire extinguisher', 'A fire extinguisher with a pin in it')
-    flashLight = Item('flashlight', 'A flashlight with a broken bulb', {'bulb': 0})
+fireExtinguiser = Item('fire extinguisher', 'A fire extinguisher with a pin in it')
+flashLight = Item('flashlight', 'A flashlight with a broken bulb', {'bulb': 0})
 
-    logBook = Item('log book', 'A log book hidden in a desk drawer, it seems to have details on the secret process of getting into the engineering chamber\'s restricted area')
+logBook = Item('log book', 'A log book hidden in a desk drawer, it seems to have details on the secret process of getting into the engineering chamber\'s restricted area')
 
-    secretCode = Item('secret code', 'A piece of paper with a code on it, it looks like it could be used to access something...', {'code': '56733'})
-    waterRation = Item('water ration', 'A water ration with a label that says "Zephyr"')
-    foodRation = Item('food ration', 'A food ration with a label that says "Zephyr"... how did he get into this room?')
-        
-    Jake = Character('Jake', 'A young medical tech who lookes injured on their side', 2)
-    Melanie = Character('Melanie', 'An injured engineer pinned by a steel gurder which appears to be embedded in the station\'s wall, she calls for help', 1)
-    Zypher = Character('Zephyr', 'Almost a child, a young trainee in shock and hiding in a closet', 3)
-
-    start = Room('Cryo', 'A dark room filled with cryro chambers where you woke up', [keycard, firstaid, crowbar], [Jake], other={'hidden_item': firstaid2})
-    corridor = Room('Corridor', 'A long corridor with a door at the end, you see a steel beam fallen on top of a woman wearing an engineers\'s jumpsuit and hear her calling for help, you see flickering flames inbetween yourself and the enginerer, but you also see a fire extinguisher in the wall!', [fireExtinguiser, flashLight], [Melanie], other={'fire': True, 'lights': False, 'incomplete_description': 'A long corridor with a door at the end, you hear shouts but there are no lights at the moment'}) 
-    offices = Room('Offices', 'A room with a few desks and a door to the north', [], [Zypher], other={'hidden_item': logBook})
-    engineering = Room('Engineering', 'A room with a large machine in the center, there is more equipment that seems to be unpowered, but the computer controls are locked down behind a patern-based password', [], [], other={'minigame': 'life support'})
-    storage = Room ('Storage', 'A room with a few shelves and a door to the south', [secretCode, waterRation, foodRation], [], other={'hidden': True})
-
-    Jake.location = start
-    Melanie.location = corridor
-    Zypher.location = offices
-
-    start.connections = {'west': corridor}
-    corridor.connections = {'east': start, 'north': offices, 'west': engineering}
-    offices.connections = {'south': corridor}
-    engineering.connections = {'east': corridor, 'south': storage}
-    storage.connections = {'north': engineering}
-
-    player = Player('Garrett', location=start)
-
-    gameState = {
-        'player': player,
-        'items': [keycard, firstaid, crowbar, fireExtinguiser, flashLight, logBook, secretCode, waterRation, foodRation],
-        'characters': [Jake, Melanie, Zypher],
-        'rooms': [start, corridor, offices, engineering, storage]
-    }
+secretCode = Item('secret code', 'A piece of paper with a code on it, it looks like it could be used to access something...', {'code': '56733'})
+waterRation = Item('water ration', 'A water ration with a label that says "Zephyr"')
+foodRation = Item('food ration', 'A food ration with a label that says "Zephyr"... how did he get into this room?')
     
-    return gameState
+Jake = Character('Jake', 'A young medical tech who lookes injured on their side', 2)
+Melanie = Character('Melanie', 'An injured engineer pinned by a steel gurder which appears to be embedded in the station\'s wall, she calls for help', 1)
+Zypher = Character('Zephyr', 'Almost a child, a young trainee in shock and hiding in a closet', 3)
 
-gameState = initialize_game_state()
+start = Room('Cryo', 'A dark room filled with cryro chambers where you woke up', [keycard, firstaid, crowbar], [Jake], other={'hidden_item': firstaid2})
+corridor = Room('Corridor', 'A long corridor with a door at the end, you see a steel beam fallen on top of a woman wearing an engineers\'s jumpsuit and hear her calling for help, you see flickering flames inbetween yourself and the enginerer, but you also see a fire extinguisher in the wall!', [fireExtinguiser, flashLight], [Melanie], other={'fire': True, 'lights': False, 'incomplete_description': 'A long corridor with a door at the end, you hear shouts but there are no lights at the moment'}) 
+offices = Room('Offices', 'A room with a few desks and a door to the north', [], [Zypher], other={'hidden_item': logBook})
+engineering = Room('Engineering', 'A room with a large machine in the center, there is more equipment that seems to be unpowered, but the computer controls are locked down behind a patern-based password', [], [], other={'minigame': 'life support'})
+storage = Room ('Storage', 'A room with a few shelves and a door to the south', [secretCode, waterRation, foodRation], [], other={'hidden': True})
+
+Jake.location = start
+Melanie.location = corridor
+Zypher.location = offices
+
+start.connections = {'west': corridor}
+corridor.connections = {'east': start, 'north': offices, 'west': engineering}
+offices.connections = {'south': corridor}
+engineering.connections = {'east': corridor, 'south': storage}
+storage.connections = {'north': engineering}
+
+player = Player('Garrett', location=start)
+
+initial = {
+    'player': player,
+    'items': [keycard, firstaid, crowbar, fireExtinguiser, flashLight, logBook, secretCode, waterRation, foodRation],
+    'characters': [Jake, Melanie, Zypher],
+    'rooms': [start, corridor, offices, engineering, storage]
+}
+
+gameState = initial.copy()
 
 # --------------------------------------------------------------------------
     
@@ -315,6 +311,8 @@ def SemanticParsing(userInput):
             if 'west' in location.connections:
                 location = location.connections['west']
                 if gameState["player"].location.other.get('fire') == True:
+                    gameState['player'].input_position += 1
+                    gameState['player'].health -= 1
                     return "You can not get to Melanie to help her because of the fire in your way"
                 gameState["player"].location = location
                 gameState['player'].input_position += 1
@@ -504,15 +502,24 @@ def something():
 @app.route('/flask/reset', methods=['POST'])
 def reset():
     global gameState
+    global initial
     
-    gameState = initialize_game_state()
+    gameState = initial.copy()
+    
+    input_position = 0
+    health = 3
+    inventory = []
+    location = start
+    
     prompt = f'Hello {gameState["player"].name}, you are in the {gameState["player"].location.name}. {gameState["player"].location.description}'
     
-    with lock:
-        with open(data_file, 'w') as f:
-            json.dump({"user_inputs": [], 'prompt_outputs': [prompt]}, f)
+    with open(data_file, 'w') as f:
+        json.dump({"user_inputs": [], 'prompt_outputs': [prompt]}, f)
     
-    return jsonify({'message': 'reset','player': gameState["player"].to_json(), 'history': {'user_inputs': [], 'prompt_outputs': [prompt]}})
+    gameState["player"] = Player('Garrett', health, location, inventory, input_position)
+    return jsonify({'message': 'JSON posted', 'player': gameState["player"].to_json(), 'history': {'user_inputs': [], 'prompt_outputs': [prompt]}})
+
+    
 
 @app.route('/flask/post', methods=['POST'])
 def post():
